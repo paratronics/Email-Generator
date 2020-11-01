@@ -1,6 +1,9 @@
 package emailapp;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Email {
     private String firstName;
@@ -8,10 +11,13 @@ public class Email {
     private String department;
     private String password;
     private String email;
+    private String emailchecked;
     int mailboxCapacity = 500;
     int defaultPasswordLength = 8;
     private String alternateEmail;
     private String companySuffix = "google.com";
+    private Set<String> nameSet = new HashSet();
+
 
     //Constructor to receive the firstName and lastName
 
@@ -19,6 +25,9 @@ public class Email {
         this.firstName = firstName;
         this.lastName = lastName;
         System.out.println("Email Generated for " + firstName + " " + lastName);
+        
+        //Load nameSet at instantiation
+        setNameSet(); 
 
         //Call a method asking for the department and return the department
         this.department = setDepartment();
@@ -28,9 +37,13 @@ public class Email {
         this.password = randomPassword(defaultPasswordLength);
         System.out.println("Your password is: " + this.password);
 
+        //validate if name currently exists
+        emailchecked = validateExisting(firstName.toLowerCase() + "." + lastName.toLowerCase());
+        
         //Combine elements to generate email
-        email = firstName.toLowerCase() + "." + lastName.toLowerCase() + "@" + department.toLowerCase() +
+        email = emailchecked + "@" + department.toLowerCase() +
                 "." + companySuffix;
+        
         System.out.println("Your email is: " + email);
 
     }
@@ -84,4 +97,29 @@ public class Email {
     public String getAlternateEmail() {
         return alternateEmail;
     }
+    
+    public Set<String> getNameSet() {
+		return nameSet;
+	}
+
+	public void setNameSet() {
+		this.nameSet.add("james.belema");//To be replace with dependency injection and configuration//nameSet;
+	}
+	
+	public String validateExisting(String namecheck) {
+		
+		String emailName = "";
+        //check if name exists already and return the name with a '-1', if it already exists.
+		for (Iterator<String> it = nameSet.iterator(); it.hasNext(); ) {
+	        String namechk = it.next();
+	        if (namechk.equals(namecheck)) {
+	        	emailName = namecheck + "-1";
+	        } else {emailName = namecheck;}
+	    }		 
+		return emailName;
+		 
+	}
+    
+    
 }
+
